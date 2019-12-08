@@ -1,0 +1,29 @@
+. /opt/intel/parallel_studio_xe_2018.1.038/psxevars.sh
+
+export CESM_PES=12
+
+sed -i -e "s/\$CESM_PES/$CESM_PES/g" $HOME/.cime/config_machines.xml
+
+cd $HOME/CESM/cime/scripts
+
+CASE=case_2
+
+./create_newcase --case $HOME/cases/B1850$CASE --compset B1850 \
+                 --res f09_g17 --machine espresso_intel --run-unsupported 
+
+cd $HOME/cases/B1850$CASE
+
+NUMNODES="$((8*$CESM_PES))" 
+./xmlchange --file env_mach_pes.xml --id NTASKS --val ${NUMNODES} 
+./xmlchange --file env_mach_pes.xml --id NTASKS_ESP --val 1
+./xmlchange --file env_mach_pes.xml --id ROOTPE --val 0 
+
+./case.setup 
+
+./case.build
+    
+#./case.submit
+
+#mkdir -p $HOME/cases
+
+#cp -R $HOME/cases/B1850$CASE $HOME/archive/cases/.

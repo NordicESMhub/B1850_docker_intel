@@ -15,6 +15,27 @@ You need to pass `parallel_studio_xe_2018_update1_cluster_edition.tgz` for being
 
 We are using a trial license for this test (see `silent.cfg`). However, you should update `silent.cfg` to pass a proper license for running on your platform.
 
+- Intel compilers:
+
+```
+wget http://registrationcenter-download.intel.com/akdlm/irc_nas/tec/12374/parallel_studio_xe_2018_update1_cluster_edition.tgz
+```
+
+## Build docker container
+
+- First clone this repository:
+
+```
+git clone https://github.com/NordicESMhub/B1850_docker_intel.git
+```
+
+- Then make sure you move `parallel_studio_xe_2018_update1_cluster_edition.tgz` in `B1850_docker_intel` folder as it will be used for building the container.
+
+- Then build the container:
+
+```
+docker build -t nordicesmhub/cesm_b1850:intel .
+```
 
 ## Running B1850 with docker
 
@@ -31,8 +52,7 @@ mv inputdata_container inputdata
 - Model outputs are stored in `/opt/uio/archive` along with the `case` folder (it can be interesting to check timing).
 
 ```
-docker pull nordicesmhub/cesm_b1850:latest
-docker run -i -v /opt/uio/inputdata:/home/cesm/inputdata -v /opt/uio/archive:/home/cesm/archive  -t nordicesmhub/cesm_b1850:latest
+docker run -i -v /opt/uio/inputdata:/home/cesm/inputdata -v /opt/uio/archive:/home/cesm/archive  -t nordicesmhub/cesm_b1850:intel
 ```
 
 Once you start your container, use `run_b1850` or any available sub-cases (`run_b1850case1` to `run_b1850_case6`), depending on the number of processors you wish to use.
